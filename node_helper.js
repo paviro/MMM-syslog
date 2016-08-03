@@ -1,43 +1,43 @@
 /* global Module */
 
 /* Magic Mirror
- * Module: MMM-Wunderlist
+ * Module: MMM-syslog
  *
  * By Paul-Vincent Roll http://paulvincentroll.com
  * MIT Licensed.
  */
 
-var NodeHelper = require("node_helper");
+const NodeHelper = require("node_helper");
+const url = require("url");
 module.exports = NodeHelper.create({
 	
 	start: function() {
-		const self = this
-		this.expressApp.get('/syslog', function (req, res) {
+		this.expressApp.get('/syslog', (req, res) => {
 			
-			var query = require('url').parse(req.url,true).query;
+			var query = url.parse(req.url, true).query;
 			var message = query.message;
-			var title = query.title;
+			var type = query.type;
 			
-			if (message == null && title == null){
-				res.send({"status": "failed", "error": "No message and title given."});
+			if (message == null && type == null){
+				res.send({"status": "failed", "error": "No message and type given."});
 			}
 			else if (message == null){
 				res.send({"status": "failed", "error": "No message given."});
 			}
-			else if (title == null) {
-				res.send({"status": "failed", "error": "No title given."});
+			else if (type == null) {
+				res.send({"status": "failed", "error": "No type given."});
 			}
 			else {
-				res.send({"status": "success", "payload": {"title": title, "message": message}});
-				self.sendSocketNotification("payload", {"title": title, "message": message});
-				console.log(message, title);
+				res.send({"status": "success", "payload": {"type": type, "message": message}});
+				this.sendSocketNotification("NEW_MESSAGE", {"type": type, "message": message});
 			}
-	
 		});
 	},
 	
 	socketNotificationReceived: function(notification, payload) {
-		console.log(notification, payload);
+		if(notification === "CONNECT"){
+			this.max = payload.max;
+		}
 	}
 	
 });
