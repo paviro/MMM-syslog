@@ -9,6 +9,7 @@
 
 Module.register('MMM-syslog',{
 	messages: [],
+
 	types: {
 		INFO: "dimmed",
 		WARNING: "normal",
@@ -24,7 +25,7 @@ Module.register('MMM-syslog',{
 	},
 	
 	start: function() {
-		this.sendSocketNotification("CONNECT", {max: this.config.max});
+		this.sendSocketNotification("CONNECT", {max: this.config.max, logFile: this.file('logs.json')});
 		Log.info("Starting module: " + this.name);
 		
 		//Update DOM every minute so that the time of the call updates and calls get removed after a certain time
@@ -36,7 +37,7 @@ Module.register('MMM-syslog',{
 	socketNotificationReceived: function(notification, payload) {
 		if(notification === "NEW_MESSAGE"){
 			this.sendNotification("SHOW_ALERT", {type: "notification", title: payload.type, message: payload.message});
-			this.messages.push({type: payload.type, message: payload.message, time: moment()});
+			this.messages.push(payload);
 			while(this.messages.length > this.config.max){
 				this.messages.shift();
 			}
@@ -47,9 +48,11 @@ Module.register('MMM-syslog',{
 	getDom: function() {
 		
 		var wrapper = document.createElement("div");
-		var title = document.createElement("header");
-		title.innerHTML = this.name;
-		wrapper.appendChild(title);
+		if(this.config.title !== false){
+			var title = document.createElement("header");
+			title.innerHTML = this.config.title || this.name;
+			wrapper.appendChild(title);
+		}
 		var logs = document.createElement("table");
 
 		for (var i = this.messages.length - 1; i >= 0; i--) {
@@ -59,7 +62,7 @@ Module.register('MMM-syslog',{
 
 			//Set caller of row
 			var caller =  document.createElement("td");
-			caller.innerHTML = this.messages[i].message;
+			caller.innerHTML = "[" + this.messages[i].type + "] " + this.messages[i].message;
 			caller.classList.add("title", "small");
 			if(this.types.hasOwnProperty(this.messages[i].type)){
 				caller.classList.add(this.types[this.messages[i].type]);
@@ -68,7 +71,7 @@ Module.register('MMM-syslog',{
 
 			//Set time of row
 			var time =  document.createElement("td");
-			time.innerHTML = moment(this.messages[i].time).fromNow();
+			time.innerHTML = moment(this.messages[i].timestamp).fromNow();
 			time.classList.add("time", "light", "xsmall");
 			callWrapper.appendChild(time);
 
