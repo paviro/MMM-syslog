@@ -63,7 +63,7 @@ Module.register('MMM-syslog',{
 			//Set caller of row
 			var caller =  document.createElement("td");
 			caller.innerHTML = "[" + this.messages[i].type + "] " + this.messages[i].message;
-			caller.classList.add("title", "small");
+			caller.classList.add("title", "small", "align-left");
 			if(this.types.hasOwnProperty(this.messages[i].type)){
 				caller.classList.add(this.types[this.messages[i].type]);
 			}
