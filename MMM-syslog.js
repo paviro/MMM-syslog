@@ -17,7 +17,8 @@ Module.register('MMM-syslog',{
 	},
 
 	defaults: {
-		max: 5
+		max: 5,
+		format: false
 	},
 
 	getScripts: function() {
@@ -71,7 +72,7 @@ Module.register('MMM-syslog',{
 
 			//Set time of row
 			var time =  document.createElement("td");
-			time.innerHTML = moment(this.messages[i].timestamp).fromNow();
+			time.innerHTML = this.config.format ? moment(this.messages[i].timestamp).format(this.config.format) : moment(this.messages[i].timestamp).fromNow();
 			time.classList.add("time", "light", "xsmall");
 			callWrapper.appendChild(time);
 
