@@ -28,6 +28,7 @@ Module.register('MMM-syslog',{
 	start: function() {
 		this.sendSocketNotification("CONNECT", {max: this.config.max, logFile: this.file('logs.json')});
 		Log.info("Starting module: " + this.name);
+		moment.locale(config.language);
 		
 		//Update DOM every minute so that the time of the call updates and calls get removed after a certain time
 		setInterval(() => {
