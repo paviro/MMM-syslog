@@ -8,17 +8,17 @@
  */
 
 Module.register('MMM-syslog',{
-	messages: [],
 
-	types: {
-		INFO: "dimmed",
-		WARNING: "normal",
-		ERROR: "bright"
-	},
+	messages: [],
 
 	defaults: {
 		max: 5,
-		format: false
+		format: false,
+		types: {
+			INFO: "dimmed",
+			WARNING: "normal",
+			ERROR: "bright"
+		}
 	},
 
 	getScripts: function() {
@@ -66,8 +66,8 @@ Module.register('MMM-syslog',{
 			var caller =  document.createElement("td");
 			caller.innerHTML = "[" + this.messages[i].type + "] " + this.messages[i].message;
 			caller.classList.add("title", "small", "align-left");
-			if(this.types.hasOwnProperty(this.messages[i].type)){
-				caller.classList.add(this.types[this.messages[i].type]);
+			if(this.config.types.hasOwnProperty(this.messages[i].type)){
+				caller.classList.add(this.config.types[this.messages[i].type]);
 			}
 			callWrapper.appendChild(caller);
 

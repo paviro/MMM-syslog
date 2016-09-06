@@ -10,6 +10,7 @@
 const NodeHelper = require("node_helper");
 const url = require("url");
 const fs = require("fs");
+
 module.exports = NodeHelper.create({
 	
 	start: function() {
