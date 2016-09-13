@@ -18,9 +18,18 @@ Module.register('MMM-syslog',{
 			INFO: "dimmed",
 			WARNING: "normal",
 			ERROR: "bright"
+		},
+		icons: {
+			INFO: "info",
+			WARNING: "exclamation",
+			ERROR: "exclamation-triangle"
 		}
 	},
 
+	getStyles: function () {
+		return ["font-awesome.css"];
+	},
+	
 	getScripts: function() {
 		return ["moment.js"];
 	},
@@ -37,6 +46,8 @@ Module.register('MMM-syslog',{
 	 },
 	
 	socketNotificationReceived: function(notification, payload) {
+		
+		
 		if(notification === "NEW_MESSAGE"){
 			this.sendNotification("SHOW_ALERT", {type: "notification", title: payload.type, message: payload.message});
 			this.messages.push(payload);
@@ -61,10 +72,27 @@ Module.register('MMM-syslog',{
 			//Create callWrapper
 			var callWrapper = document.createElement("tr");
 			callWrapper.classList.add("normal");
-
+	
+			var iconCell = document.createElement("td");
+			var icon =  document.createElement("i");
+			if(this.config.icons.hasOwnProperty(this.messages[i].type)){
+				icon.classList.add("fa", "fa-fw", "fa-" + this.config.icons[this.messages[i].type]);
+			}
+			else {
+				icon.classList.add("fa", "fa-fw", "fa-question");
+			}
+			if(this.config.types.hasOwnProperty(this.messages[i].type)){
+				icon.classList.add(this.config.types[this.messages[i].type]);
+			}
+		
+			iconCell.classList.add("small");
+		
+			iconCell.appendChild(icon);
+			callWrapper.appendChild(iconCell);
+		
 			//Set caller of row
 			var caller =  document.createElement("td");
-			caller.innerHTML = "[" + this.messages[i].type + "] " + this.messages[i].message;
+			caller.innerHTML = " " + this.messages[i].message;
 			caller.classList.add("title", "small", "align-left");
 			if(this.config.types.hasOwnProperty(this.messages[i].type)){
 				caller.classList.add(this.config.types[this.messages[i].type]);
