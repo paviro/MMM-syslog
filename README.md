@@ -3,7 +3,7 @@ Notification API Module for MagicMirror<sup>2</sup>
 
 ## Example
 
-![](.github/example.jpg)
+![](https://forum.magicmirror.builders/uploads/files/1473753516823-syslog-icon-4.jpg)
 
 ## Dependencies
   * An installation of [MagicMirror<sup>2</sup>](https://github.com/MichMich/MagicMirror)
