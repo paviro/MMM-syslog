@@ -23,7 +23,8 @@ Module.register('MMM-syslog',{
 			INFO: "info",
 			WARNING: "exclamation",
 			ERROR: "exclamation-triangle"
-		}
+		},
+		shortenMessage: false
 	},
 
 	getStyles: function () {
@@ -90,9 +91,13 @@ Module.register('MMM-syslog',{
 			iconCell.appendChild(icon);
 			callWrapper.appendChild(iconCell);
 		
+			var message = this.messages[i].message;
+			if(this.config.shortenMessage && message.length > this.config.shortenMessage){
+				message = message.slice(0, this.config.shortenMessage) + "&#8230;";
+			}
 			//Set caller of row
 			var caller =  document.createElement("td");
-			caller.innerHTML = " " + this.messages[i].message;
+			caller.innerHTML = " " + message;
 			caller.classList.add("title", "small", "align-left");
 			if(this.config.types.hasOwnProperty(this.messages[i].type)){
 				caller.classList.add(this.config.types[this.messages[i].type]);
