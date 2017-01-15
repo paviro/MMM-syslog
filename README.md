@@ -28,6 +28,7 @@ Notification API Module for MagicMirror<sup>2</sup>
 | `max` | `5` | How many messages should be displayed on the screen. |
 | `format` | `false` | Displays relative date format, for absolute date format provide a string like `'DD:MM HH:mm'` [All Options](http://momentjs.com/docs/#/displaying/format/) |
 | `types` | `{INFO: "dimmed", WARNING: "normal", ERROR: "bright"}` | Object with message types and their css class. |
+| `shortenMessage` | `false` | After how many characters the message should be cut. Default: show all. |
 
 ## How to Use
 Make an http get request like:
