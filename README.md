@@ -33,4 +33,5 @@ Notification API Module for MagicMirror<sup>2</sup>
 
 ## How to Use
 Make an http get request like:
-  http://MIRROR_IP:MIRROR_PORT/syslog?type=INFO&message=YOUR_MESSAGE
+  http://MIRROR_IP:MIRROR_PORT/syslog?type=INFO&message=YOUR_MESSAGE&silent=true : no notification
+  http://MIRROR_IP:MIRROR_PORT/syslog?type=INFO&message=YOUR_MESSAGE&silent=false : with notification

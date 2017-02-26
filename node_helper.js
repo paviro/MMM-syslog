@@ -12,14 +12,15 @@ const url = require("url");
 const fs = require("fs");
 
 module.exports = NodeHelper.create({
-	
+
 	start: function() {
 		this.expressApp.get('/syslog', (req, res) => {
-			
+
 			var query = url.parse(req.url, true).query;
 			var message = query.message;
 			var type = query.type;
-			
+      var silent = query.silent || false;
+
 			if (message == null && type == null){
 				res.send({"status": "failed", "error": "No message and type given."});
 			}
@@ -30,14 +31,14 @@ module.exports = NodeHelper.create({
 				res.send({"status": "failed", "error": "No type given."});
 			}
 			else {
-				var log = {"type": type, "message": message, "timestamp": new Date()};
+				var log = {"type": type, "message": message, "silent": silent, "timestamp": new Date()};
 				res.send({"status": "success", "payload": log});
 				this.sendSocketNotification("NEW_MESSAGE", log);
 				this.storeLog(log);
 			}
 		});
 	},
-	
+
 	socketNotificationReceived: function(notification, payload) {
 		if(notification === "CONNECT"){
 			this.logFile = payload.logFile;
@@ -73,5 +74,5 @@ module.exports = NodeHelper.create({
 			return false;
 		}
 	}
-	
+
 });

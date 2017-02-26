@@ -49,7 +49,7 @@ Module.register('MMM-syslog',{
 
 	socketNotificationReceived: function(notification, payload) {
 		if(notification === "NEW_MESSAGE"){
-      if (this.config.alert) {
+      if (this.config.alert && !payload.silent) {
 			  this.sendNotification("SHOW_ALERT", {type: "notification", title: payload.type, message: payload.message});
       }
 			this.messages.push(payload);
