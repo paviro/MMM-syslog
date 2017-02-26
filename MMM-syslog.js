@@ -24,33 +24,34 @@ Module.register('MMM-syslog',{
 			WARNING: "exclamation",
 			ERROR: "exclamation-triangle"
 		},
-		shortenMessage: false
+		shortenMessage: false,
+    alert: true
 	},
 
 	getStyles: function () {
 		return ["font-awesome.css"];
 	},
-	
+
 	getScripts: function() {
 		return ["moment.js"];
 	},
-	
+
 	start: function() {
 		this.sendSocketNotification("CONNECT", {max: this.config.max, logFile: this.file('logs.json')});
 		Log.info("Starting module: " + this.name);
 		moment.locale(config.language);
-		
+
 		//Update DOM every minute so that the time of the call updates and calls get removed after a certain time
 		setInterval(() => {
 			this.updateDom();
 		}, 60000);
 	 },
-	
+
 	socketNotificationReceived: function(notification, payload) {
-		
-		
 		if(notification === "NEW_MESSAGE"){
-			this.sendNotification("SHOW_ALERT", {type: "notification", title: payload.type, message: payload.message});
+      if (this.config.alert) {
+			  this.sendNotification("SHOW_ALERT", {type: "notification", title: payload.type, message: payload.message});
+      }
 			this.messages.push(payload);
 			while(this.messages.length > this.config.max){
 				this.messages.shift();
@@ -58,9 +59,9 @@ Module.register('MMM-syslog',{
 			this.updateDom(3000);
 		}
 	 },
-	
+
 	getDom: function() {
-		
+
 		var wrapper = document.createElement("div");
 		if(this.config.title !== false){
 			var title = document.createElement("header");
@@ -73,7 +74,7 @@ Module.register('MMM-syslog',{
 			//Create callWrapper
 			var callWrapper = document.createElement("tr");
 			callWrapper.classList.add("normal");
-	
+
 			var iconCell = document.createElement("td");
 			var icon =  document.createElement("i");
 			if(this.config.icons.hasOwnProperty(this.messages[i].type)){
@@ -85,12 +86,12 @@ Module.register('MMM-syslog',{
 			if(this.config.types.hasOwnProperty(this.messages[i].type)){
 				icon.classList.add(this.config.types[this.messages[i].type]);
 			}
-		
+
 			iconCell.classList.add("small");
-		
+
 			iconCell.appendChild(icon);
 			callWrapper.appendChild(iconCell);
-		
+
 			var message = this.messages[i].message;
 			if(this.config.shortenMessage && message.length > this.config.shortenMessage){
 				message = message.slice(0, this.config.shortenMessage) + "&#8230;";
