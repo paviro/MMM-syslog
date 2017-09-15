@@ -25,6 +25,7 @@ Notification API Module for MagicMirror<sup>2</sup>
 ## Config Options
 | **Option** | **Default** | **Description** |
 | --- | --- | --- |
+| `title`| `MMM-syslog` | The string that gets displayed as title at the top of the module. |
 | `max` | `5` | How many messages should be displayed on the screen. |
 | `format` | `false` | Displays relative date format, for absolute date format provide a string like `'DD:MM HH:mm'` [All Options](http://momentjs.com/docs/#/displaying/format/) |
 | `types` | `{INFO: "dimmed", WARNING: "normal", ERROR: "bright"}` | Object with message types and their css class. |
