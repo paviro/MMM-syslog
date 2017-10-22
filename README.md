@@ -1,5 +1,5 @@
 # MMM-syslog
-Notification API Module for MagicMirror<sup>2</sup>
+Notification API Module for MagicMirror<sup>2</sup>. Now, supporting [MMM-TelegramBot](https://github.com/eouia/MMM-TelegramBot) (command: /syslog).
 
 ## Example
 
