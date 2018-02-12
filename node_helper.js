@@ -19,13 +19,20 @@ module.exports = NodeHelper.create({
 			var query = url.parse(req.url, true).query;
 			var message = query.message;
 			var type = query.type;
-      var silent = query.silent || false;
+      			var silent = query.silent || false;
 
 			if (message == null && type == null){
 				res.send({"status": "failed", "error": "No message and type given."});
 			}
 			else if (message == null){
-				res.send({"status": "failed", "error": "No message given."});
+				if (type === "REMOVE" ) {
+					res.send({"status": "succes", "payload": "Logs removed."});
+					this.sendSocketNotification("REMOVE_MESSAGES");
+					this.deleteLog();
+				}
+				else {
+					res.send({"status": "failed", "error": "No message given."});
+				}
 			}
 			else if (type == null) {
 				res.send({"status": "failed", "error": "No type given."});
@@ -45,6 +52,11 @@ module.exports = NodeHelper.create({
 			this.loadLogs();
 			this.max = payload.max;
 		}
+	},
+
+	deleteLog: function(){
+		this.logs = [];
+		fs.writeFileSync(this.logFile, JSON.stringify({"messages": this.logs}), 'utf8');
 	},
 
 	storeLog: function(log){
