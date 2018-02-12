@@ -49,15 +49,19 @@ Module.register('MMM-syslog',{
 
 	socketNotificationReceived: function(notification, payload) {
 		if(notification === "NEW_MESSAGE"){
-      if (this.config.alert && !payload.silent) {
+      			if (this.config.alert && !payload.silent) {
 			  this.sendNotification("SHOW_ALERT", {type: "notification", title: payload.type, message: payload.message});
-      }
+			}
 			this.messages.push(payload);
 			while(this.messages.length > this.config.max){
 				this.messages.shift();
 			}
 			this.updateDom(3000);
 		}
+		else if(notification === "REMOVE_MESSAGES"){
+			this.messages = [];
+	 		this.updateDom(3000);
+	 	}
 	 },
 
 	getDom: function() {
@@ -66,6 +70,7 @@ Module.register('MMM-syslog',{
 		if(this.config.title !== false){
 			var title = document.createElement("header");
 			title.innerHTML = this.config.title || this.name;
+			title.classList.add("medium", "align-left");
 			wrapper.appendChild(title);
 		}
 		var logs = document.createElement("table");
@@ -87,7 +92,7 @@ Module.register('MMM-syslog',{
 				icon.classList.add(this.config.types[this.messages[i].type]);
 			}
 
-			iconCell.classList.add("small");
+			iconCell.classList.add("medium");
 
 			iconCell.appendChild(icon);
 			callWrapper.appendChild(iconCell);
@@ -99,7 +104,7 @@ Module.register('MMM-syslog',{
 			//Set caller of row
 			var caller =  document.createElement("td");
 			caller.innerHTML = " " + message;
-			caller.classList.add("title", "small", "align-left");
+			caller.classList.add("title", "medium", "align-left");
 			if(this.config.types.hasOwnProperty(this.messages[i].type)){
 				caller.classList.add(this.config.types[this.messages[i].type]);
 			}
@@ -108,7 +113,7 @@ Module.register('MMM-syslog',{
 			//Set time of row
 			var time =  document.createElement("td");
 			time.innerHTML = this.config.format ? moment(this.messages[i].timestamp).format(this.config.format) : moment(this.messages[i].timestamp).fromNow();
-			time.classList.add("time", "light", "xsmall");
+			time.classList.add("time", "light", "small","align-right");
 			callWrapper.appendChild(time);
 
 			//Add to logs
